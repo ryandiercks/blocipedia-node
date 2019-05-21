@@ -6,6 +6,7 @@
   <body>
    <%- include('../static/partials/navbar.ejs') -%>
 
+
    <main class="container">
      <h1><%= wiki.title %></h1>
      <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
@@ -14,7 +15,7 @@
      </form>
      <p><%= wiki.body %></p>
    </main>
-   
+
    <%- include('../static/partials/baseScripts.ejs') -%>
  </body>
 </html>
