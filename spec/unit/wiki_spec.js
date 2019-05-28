@@ -9,7 +9,7 @@ describe("Wiki", () => {
    beforeEach((done) => {
       this.wiki;
       this.user;
-  
+
       sequelize.sync({force: true}).then((res) => {
         User.create({
           name: "starman",
@@ -65,7 +65,6 @@ describe("Wiki", () => {
          })
          .catch((err) => {
             expect(err.message).toContain("Wiki.body cannot be null");
-            expect(err.message).toContain("Wiki.private cannot be null");
             expect(err.message).toContain("Wiki.userId cannot be null");
             done();
          });
@@ -74,7 +73,7 @@ describe("Wiki", () => {
    });
 
    describe("#setUser()", () => {
-    
+
     it("should associate a wiki and a user together", (done) => {
       User.create({
         name: "Bobby Drake",

@@ -13,8 +13,9 @@ module.exports = {
       password: req.body.password,
       passwordConfirmation: req.body.passwordConfirmation
     };
-
+console.log("any string")
     userQueries.createUser(newUser, (err, user) => {
+console.log(err)
       if(err){
         req.flash("error", err);
         res.redirect("/users/signup");

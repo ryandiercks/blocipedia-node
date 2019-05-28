@@ -4,7 +4,7 @@
   "description": "A Wikipedia-like application for users to create public/private wikis",
   "main": "src/server.js",
   "scripts": {
-    "test": "export NODE_ENV=test && jasmine",
+    "test": "set NODE_ENV=test&& jasmine",
     "start": "node src/server.js"
   },
   "repository": {
