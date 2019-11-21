@@ -3,29 +3,21 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/";
 
 describe("routes : static", () => {
-   
-   describe("GET /", () => {
 
-      it("should return code 200 and have Welcome to Blocipedia", (done) => {
-         request.get(base, (err, res, body) => {
-            expect(res.statusCode).toBe(200);
-            expect(res.body).toContain("Welcome to Blocipedia");
-            done();
-         });
+  // Set the test suite title to match HTTP verb and route it will test
+  describe("GET /", () => {
+
+    // Status code of 200 indicates that the request was successful
+    it("should return status code 200", (done) => {
+
+      // Send GET request to the base URL
+      request.get(base, (err, res, body) => {
+        expect(res.statusCode).toBe(200);
+	expect(body).toContain("Welcome to Blocipedia-node");
+
+        // done method lets Jasmine know test is completed
+        done();
       });
-
-   });
-
-   describe("GET /about", () => {
-
-      it("should return status code 200 from /about and have 'About Us' in the body", (done) => {
-         request.get(`${base}about`, (err, res, body) => {
-            expect(res.statusCode).toBe(200);
-            expect(res.body).toContain("About Us");
-            done();
-         });
-      });
-
-   });
-
+    });
+  });
 });

@@ -2,106 +2,100 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Wiki = require("../../src/db/models").Wiki;
 const User = require("../../src/db/models").User;
 
-
-
 describe("Wiki", () => {
+    beforeEach((done) => {
+	this.wiki;
+	this.user;
 
-   beforeEach((done) => {
-      this.wiki;
-      this.user;
-
-      sequelize.sync({force: true}).then((res) => {
-        User.create({
-          name: "starman",
-          email: "starman@tesla.com",
-          password: "Trekkie4lyfe"
-        })
-        .then((user) => {
-          this.user = user; //store the user
-          Wiki.create({
-            title: "Expeditions to Alpha Centauri",
-            body: "A compilation of reports from recent visits to the star system.",
-            private: false,
-            userId: this.user.id
-          })
-          .then((wiki) => {
-            this.wiki = wiki; //store the wiki
+        sequelize.sync({force: true})
+        .then(() => {
             done();
-          })
-          .catch((err) => {
+        })
+        .catch((err) => {
             console.log(err);
+            done();
+        });
+    });
+
+    describe("#create()", () => {
+        it("should create a private Wiki object with a valid title and body", (done) => {
+            Wiki.create({
+                title: "History of Space Exploration",
+                body: "The first realistic proposal of spaceflight goes back to Konstantin Tsiolkovsky.",
+                private: true
+            })
+            .then((wiki) => {
+                expect(wiki.title).toBe("History of Space Exploration");
+                expect(wiki.body).toBe("The first realistic proposal of spaceflight goes back to Konstantin Tsiolkovsky.");
+                expect(wiki.private).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            });
+        });
+        it("should not create a wiki with a title already taken", (done) => {
+            Wiki.create({
+              title: "History of Space Exploration",
+              body: "The first realistic proposal of spaceflight goes back to Konstantin Tsiolkovsky.",
+              private: true
+            })
+            .then((wiki) => {
+              Wiki.create({
+                  title: "History of Space Exploration",
+                  body: "Spaceflight became an engineering possibility with the work of Robert H. Goddard.",
+                  private: true
+              })
+              .then((wiki) => {
+                // the code in this block will not be evaluated since the validation error
+                // will skip it. Instead, we'll catch the error in the catch block below
+                // and set the expectations there
+                done();
+              })
+              .catch((err) => {
+                expect(err.message).toContain("Validation error");
+                done();
+              });
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            });
           });
-        })
-      });
+      
+        });
 
-   });
+        describe("#setUser", () => {
+            it("should associate a wiki and a user together", (done) => {
+                User.create({
+                    username: "user_name",
+                    email: "user@example.com",
+                    password: "1234567890"
+                })
+                .then((user) => {
+                    this.user = user;
 
-   describe("#create()", () => {
-
-      it("should create a wiki with a title, body, and private status", (done) => {
-         Wiki.create({
-            title: "X-men",
-            body: "Fictional superhero group",
-            private: false,
-            userId: this.user.id
-         })
-         .then((wiki) => {
-            expect(wiki.title).toBe("X-men");
-            expect(wiki.body).toBe("Fictional superhero group");
-            done();
-         })
-         .catch((err) => {
-            console.log(err);
-            done();
-         });
-      });
-
-      it("should not create a wiki missing title, body, userId, or private status", (done) => {
-         Wiki.create({
-            title: "Avengers",
-         })
-         .then((wiki) => {
-            done();
-         })
-         .catch((err) => {
-            expect(err.message).toContain("Wiki.body cannot be null");
-            expect(err.message).toContain("Wiki.userId cannot be null");
-            done();
-         });
-      });
-
-   });
-
-   describe("#setUser()", () => {
-
-    it("should associate a wiki and a user together", (done) => {
-      User.create({
-        name: "Bobby Drake",
-        email: "iceman@gmail.com",
-        password: "Chillyfrost21"
-      })
-      .then((newUser) => {
-        expect(this.wiki.userId).toBe(this.user.id);
-        this.wiki.setUser(newUser)
-        .then((wiki) => {
-          expect(this.wiki.userId).toBe(newUser.id);
-          done();
-        })
-      })
-    });
-
-   });
-
-   describe("#getUser()", () => {
-
-    it("should return the associated wiki", (done) => {
-      this.wiki.getUser()
-      .then((associatedUser) => {
-        expect(associatedUser.email).toBe("starman@tesla.com");
-        done();
-      })
-    });
-
-   });
-
+                    Wiki.create({
+                        title: "History of Space Exploration",
+                        body: "The first realistic proposal of spaceflight goes back to Konstantin Tsiolkovsky.",
+                        private: true,
+                        userId: this.user.id
+                    })
+                    .then((wiki) => {
+                        expect(wiki.userId).toBe(this.user.id);
+                        done();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                })
+            });
+        });
 });
