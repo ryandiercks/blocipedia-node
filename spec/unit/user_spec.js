@@ -4,7 +4,7 @@ const User = require("../../src/db/models").User;
 describe("User", () => {
 
   beforeEach((done) => {
-    // Start each test with an empty table.
+    // Start each test with an empty table. 
     sequelize.sync({force: true})
     .then(() => {
       done();
@@ -17,7 +17,7 @@ describe("User", () => {
 
   describe("#create()", () => {
 
-    // Test to ensure the successful creation of a user with the right attribute values.
+    // Test to ensure the successful creation of a user with the right attribute values. 
     it("should create a User object with a valid username, email and password", (done) => {
       User.create({
 	username: "user_name",
@@ -51,7 +51,7 @@ describe("User", () => {
         done();
       })
       .catch((err) => {
-        // Confirm that we return a validation error
+        // Confirm that we return a validation error 
         expect(err.message).toContain("Validation error: must be a valid email");
         done();
       });
@@ -59,7 +59,7 @@ describe("User", () => {
 
     it("should not create a user with an email already taken", (done) => {
 
-      // Test a returned validation error when creating a user with a duplicate email
+      // Test a returned validation error when creating a user with a duplicate email 
       User.create({
 	username: "user_name",
         email: "user@example.com",
@@ -70,7 +70,7 @@ describe("User", () => {
         User.create({
 	  username: "user_name",
           email: "user@example.com",
-          password: "blocipedia!"
+          password: "nananananananananananananananana BATMAN!"
         })
         .then((user) => {
 
