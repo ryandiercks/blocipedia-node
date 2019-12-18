@@ -1,8 +1,6 @@
 # Blocipedia-node
 #### a web application that allows users to create, collaborate and share wikis 
 
- ![screenshot](https://github.com/norsween/blocipedia-node/blob/master/src/assets/images/blocipedia-node.gif)
-
  ***
 ### Resources:
 * Node.js

@@ -1,6 +1,6 @@
 module.exports = class ApplicationPolicy {
 
-  constructor(user, record, collaborator) {
+  constructor(user, record) {
     this.user = user;
     this.record = record;
   }
@@ -17,10 +17,6 @@ module.exports = class ApplicationPolicy {
     return this.user && this.user.role == "premium";
   }
 
-  _isOwner() {
-    return this.record && this.record.userId == "this.user.id";
-  }
-
   new() {
     return this.user != null;
   }
@@ -34,13 +30,9 @@ module.exports = class ApplicationPolicy {
   }
 
   edit() {
-    if(this.record.private == false) {
-      return this.new() &&
-      this.record && (this._isStandard() || this._isAdmin() || this._isPremium());
-    } else if (this.record.private == true) {
-      return this.new() &&
-      this.record && (this._isStandard() || this._isAdmin() || this._isPremium());
-    }
+    return this.new() &&
+      this.record && (this._isOwner() || this._isStandard());
+      this.record && (this._isOwner() || this._isAdmin());
   }
 
   update() {
@@ -49,10 +41,6 @@ module.exports = class ApplicationPolicy {
 
   destroy() {
     return this.update();
-  }
-
-  showCollaborators() {
-    return this.edit();
   }
 }
 
