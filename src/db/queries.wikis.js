@@ -41,13 +41,13 @@ module.exports = {
               callback(404);
           } else {
               result["wiki"] = wiki;
-              //Collaborator.scope({method: ["collaboratorsFor", id]}).all()
-              //.then((collaborators) => {
-              //    result["collaborators"] = collaborators;
-              //    callback(null, result);
-              //})
-              //.catch((err) => {
-              //    callback(err);
+              Collaborator.scope({method: ["collaboratorsFor", id]}).all()
+              .then((collaborators) => {
+                  result["collaborators"] = collaborators;
+                  callback(null, result);
+              })
+              .catch((err) => {
+                  callback(err);
               })
           }
       })
